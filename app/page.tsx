@@ -28,36 +28,36 @@ export default function HomePage() {
     {
       heading: '',
       links: [
-        { label: 'Ammar Fahmy | WhatsApp', url: '#', icon: <FaWhatsapp className="text-green-500" /> },
-        { label: 'Ammar Fahmy | LinkedIn', url: '#', icon: <FaLinkedin className="text-blue-600" /> },
-        { label: 'Ammar Fahmy | X', url: '#', icon: <FaTwitter className="text-black" /> },
-        { label: 'Ammar Fahmy | GitHub', url: '#', icon: <FaGithub /> },
-        { label: 'Ammar Fahmy | E-Mail', url: '#', icon: <FaEnvelope className="text-red-500" /> }
+        { label: 'Ammar Fahmy | WhatsApp', url: 'https://wa.me/+94766062424', icon: <FaWhatsapp className="text-green-500" /> },
+        { label: 'Ammar Fahmy | Facebook', url: 'https://www.facebook.com/mfahmy.ammar/', icon: <FaFacebook className="text-blue-700" /> },
+        { label: 'Ammar Fahmy | LinkedIn', url: 'https://www.linkedin.com/in/ammar-fahmy/', icon: <FaLinkedin className="text-blue-600" /> },
+        { label: 'Ammar Fahmy | X', url: 'https://x.com/__sharling__', icon: <FaTwitter className="text-black" /> },
+        { label: 'Ammar Fahmy | GitHub', url: 'https://github.com/AmmarFahmy', icon: <FaGithub /> },
+        { label: 'Ammar Fahmy | E-Mail', url: 'mailto:ammar.mfahmy@gmail.com', icon: <FaEnvelope className="text-red-500" /> }
       ]
     },
     {
       heading: 'LawMate.lk',
       headingLogo: '/lawmate.svg',
       links: [
-        { label: 'LawMate.lk | WhatsApp', url: '#', icon: <FaWhatsapp className="text-green-500" /> },
-        { label: 'LawMate.lk | Website', url: '#', icon: <FaGlobe className="text-amber-600" /> },
-        { label: 'LawMate.lk | Facebook', url: '#', icon: <FaFacebook className="text-blue-700" /> },
-        { label: 'LawMate.lk | Instagram', url: '#', icon: <FaInstagram className="text-pink-600" /> },
-        { label: 'LawMate.lk | LinkedIn', url: '#', icon: <FaLinkedin className="text-blue-600" /> },
-        { label: 'LawMate.lk | E-Mail', url: '#', icon: <FaEnvelope className="text-red-500" /> },
-        { label: 'LawMate.lk | X', url: '#', icon: <FaTwitter className="text-black" /> }
+        { label: 'LawMate.lk | WhatsApp', url: 'https://wa.me/+94777357075', icon: <FaWhatsapp className="text-green-500" /> },
+        { label: 'LawMate.lk | Website', url: 'https://lawmate.lk/', icon: <FaGlobe className="text-amber-600" /> },
+        { label: 'LawMate.lk | Facebook', url: 'https://www.facebook.com/lawmate.lk', icon: <FaFacebook className="text-blue-700" /> },
+        { label: 'LawMate.lk | Instagram', url: 'https://www.instagram.com/lawmate.lk', icon: <FaInstagram className="text-pink-600" /> },
+        { label: 'LawMate.lk | LinkedIn', url: 'https://www.linkedin.com/company/lawmate-srilanka/', icon: <FaLinkedin className="text-blue-600" /> },
+        { label: 'LawMate.lk | X', url: 'https://x.com/lawmate_lk', icon: <FaTwitter className="text-black" /> },
+        { label: 'LawMate.lk | E-Mail', url: 'mailto:hi@lawmate.lk', icon: <FaEnvelope className="text-red-500" /> },
       ]
     },
     {
       heading: 'NeuroniumAI',
       headingLogo: '/neuroniumai.svg',
       links: [
-        { label: 'NeuroniumAI | WhatsApp', url: '#', icon: <FaWhatsapp className="text-green-500" /> },
-        { label: 'NeuroniumAI | Website', url: '#', icon: <FaGlobe className="text-amber-600" /> },
-        { label: 'NeuroniumAI | Facebook', url: '#', icon: <FaFacebook className="text-blue-700" /> },
-        { label: 'NeuroniumAI | LinkedIn', url: '#', icon: <FaLinkedin className="text-blue-600" /> },
-        { label: 'NeuroniumAI | X', url: '#', icon: <FaTwitter className="text-black" /> },
-        { label: 'NeuroniumAI | E-Mail', url: '#', icon: <FaEnvelope className="text-red-500" /> }
+        { label: 'NeuroniumAI | WhatsApp', url: 'https://wa.me/+94777357075', icon: <FaWhatsapp className="text-green-500" /> },
+        { label: 'NeuroniumAI | Website', url: 'https://www.neuroniumai.com/', icon: <FaGlobe className="text-amber-600" /> },
+        { label: 'NeuroniumAI | Facebook', url: 'https://www.facebook.com/neuroniumai', icon: <FaFacebook className="text-blue-700" /> },
+        { label: 'NeuroniumAI | LinkedIn', url: 'https://www.linkedin.com/company/neuroniumai/', icon: <FaLinkedin className="text-blue-600" /> },
+        { label: 'NeuroniumAI | E-Mail', url: 'mailto:hi@neuroniumai.com', icon: <FaEnvelope className="text-red-500" /> }
       ]
     }
   ];
@@ -74,7 +74,7 @@ export default function HomePage() {
       />
       <h1 className="text-xl md:text-2xl font-semibold text-gray-800 text-center">Ammar Fahmy</h1>
       <p className="text-center text-gray-600 text-sm md:text-base max-w-md">
-        Senior AI/ML Engineer | Lead Data Scientist | NLP Specialist | Certified AI Expert | Founder & CEO of NeuroniumAI, LawMate.lk | Co-Creating the Future of Business with AI
+        Senior AI/ML Engineer | Lead Data Scientist | NLP Specialist | Certified AI Expert | Founder & CEO of NeuroniumAI, LawMate.lk | Head of IT @ ESHIFT | Co-Creating the Future of Business with AI
       </p>
 
       {/* Links Section */}

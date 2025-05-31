@@ -5,8 +5,13 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'My Bio Profile',
-  description: 'A beautiful bio link page built with Next.js 14 and Tailwind CSS.'
+  title: 'Ammar Fahmy',
+  description: 'A beautiful bio link page built with Next.js 14 and Tailwind CSS.',
+  icons: {
+    icon: '/avatar.svg',
+    shortcut: '/avatar.svg',
+    apple: '/avatar.svg',
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
