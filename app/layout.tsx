@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Ammar Fahmy',
-  description: 'A beautiful bio link page built with Next.js 14 and Tailwind CSS.',
+  description: "Ammar Fahmy's bio links app",
   icons: {
     icon: '/avatar.svg',
     shortcut: '/avatar.svg',
