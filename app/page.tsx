@@ -46,15 +46,15 @@ export default function HomePage() {
 
   // Achievement badges data
   const badges: Badge[] = [
-    { id: 'badge0', name: 'AI Certification', description: 'Advanced AI & Machine Learning' },
-    { id: 'badge1', name: 'Cloud Expert', description: 'AWS/Google Cloud Certified' },
-    { id: 'badge2', name: 'Data Science', description: 'Professional Data Scientist' },
-    { id: 'badge3', name: 'Deep Learning', description: 'Neural Networks Specialist' },
-    { id: 'badge4', name: 'NLP Expert', description: 'Natural Language Processing' },
-    { id: 'badge5', name: 'ML Engineering', description: 'Machine Learning Engineer' },
-    { id: 'badge6', name: 'AI Research', description: 'Research & Development' },
-    { id: 'badge7', name: 'Innovation', description: 'AI Innovation Leader' },
-    { id: 'badge8', name: 'Entrepreneurship', description: 'Tech Startup Founder' }
+    { id: 'badge0', name: 'Professional Data Scientist', description: 'Professional' },
+    { id: 'badge1', name: 'Data Engineering and Machine Learning using Spark', description: 'Skilled' },
+    { id: 'badge2', name: 'Deep Learning and Reinforcement Learning', description: 'Skilled' },
+    { id: 'badge3', name: 'Machine Learning with Apache Spark', description: 'Skilled' },
+    { id: 'badge4', name: 'Professional Data Analyst', description: 'Professional' },
+    { id: 'badge5', name: 'Professional Data Scientist', description: 'Professional' },
+    { id: 'badge6', name: 'Google Prompting Essentials', description: 'Certified' },
+    { id: 'badge7', name: 'Deep Learning with TensorFlow', description: 'Skilled' },
+    { id: 'badge8', name: 'Quantum Enigmas', description: 'Certified' }
   ];
 
   // Copy profile URL to clipboard
