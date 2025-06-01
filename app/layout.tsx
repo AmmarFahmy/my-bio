@@ -19,10 +19,11 @@ export const metadata = {
     siteName: 'Ammar Fahmy Bio',
     images: [
       {
-        url: '/avatar.svg',
-        width: 400,
-        height: 400,
+        url: '/avatar.png',
+        width: 1200,
+        height: 1200,
         alt: 'Ammar Fahmy Profile Picture',
+        type: 'image/png',
       },
     ],
   },
@@ -30,7 +31,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Ammar Fahmy - Senior AI/ML Engineer & Data Scientist',
     description: 'Co-Creating the Future of Business with AI',
-    images: ['/avatar.svg'],
+    images: ['/avatar.png'],
     creator: '@__sharling__',
   },
   robots: {

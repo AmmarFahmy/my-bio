@@ -111,7 +111,7 @@ export default function HomePage() {
       {/* Profile Section with Animation */}
       <div className="animate-fadeInUp">
         <Image
-          src="/avatar.svg"
+          src="/avatar.png"
           alt="Profile avatar"
           width={140}
           height={140}
