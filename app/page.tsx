@@ -198,7 +198,7 @@ export default function HomePage() {
               className="group relative animate-scaleIn"
               style={{ animationDelay: `${1400 + index * 150}ms` }}
             >
-              <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm shadow-lg border border-gray-200 p-2 transition-all duration-300 hover:scale-110 hover:shadow-xl">
+              <div className="relative overflow-hidden rounded-xl shadow-lg p-2 transition-all duration-300 hover:scale-110 hover:shadow-xl">
                 <Image
                   src={`/${badge.id}.png`}
                   alt={badge.name}

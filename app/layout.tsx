@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Ammar Fahmy - Senior AI/ML Engineer & Data Scientist',
-  description: 'Senior AI/ML Engineer, Lead Data Scientist, NLP Specialist & Certified AI Expert. Founder & CEO of NeuroniumAI, LawMate.lk. Transforming businesses with AI innovation.',
+  description: 'Co-Creating the Future of Business with AI',
   keywords: 'Ammar Fahmy, AI Engineer, Machine Learning, Data Scientist, NLP, Artificial Intelligence, NeuroniumAI, LawMate, AI Consultant, ML Engineer, Deep Learning',
   authors: [{ name: 'Ammar Fahmy' }],
   creator: 'Ammar Fahmy',
@@ -15,7 +15,7 @@ export const metadata = {
     locale: 'en_US',
     url: 'https://your-domain.com', // Replace with your actual domain
     title: 'Ammar Fahmy - Senior AI/ML Engineer & Data Scientist',
-    description: 'Senior AI/ML Engineer, Lead Data Scientist, NLP Specialist & Certified AI Expert. Founder & CEO of NeuroniumAI, LawMate.lk. Transforming businesses with AI innovation.',
+    description: 'Co-Creating the Future of Business with AI',
     siteName: 'Ammar Fahmy Bio',
     images: [
       {
@@ -29,7 +29,7 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Ammar Fahmy - Senior AI/ML Engineer & Data Scientist',
-    description: 'Senior AI/ML Engineer, Lead Data Scientist, NLP Specialist & Certified AI Expert. Founder & CEO of NeuroniumAI, LawMate.lk.',
+    description: 'Co-Creating the Future of Business with AI',
     images: ['/avatar.svg'],
     creator: '@__sharling__',
   },
