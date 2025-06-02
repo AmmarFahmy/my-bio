@@ -189,7 +189,7 @@ export default function HomePage() {
       {/* Skills & Achievement Badges Section */}
       <section className="w-full mt-8 animate-fadeInUp animation-delay-1200">
         <h2 className="text-center text-lg font-semibold text-gray-800 mb-6">
-          Skills & Achievements
+          Skills, eBadges & Recognitions
         </h2>
         <div className="grid grid-cols-3 md:grid-cols-5 gap-4 justify-items-center max-w-lg mx-auto">
           {badges.map((badge, index) => (
@@ -198,7 +198,7 @@ export default function HomePage() {
               className="group relative animate-scaleIn"
               style={{ animationDelay: `${1400 + index * 150}ms` }}
             >
-              <div className="relative overflow-hidden rounded-xl shadow-lg p-2 transition-all duration-300 hover:scale-110 hover:shadow-xl">
+              <div className="relative overflow-hidden rounded-xl p-2 transition-all duration-300 hover:scale-110">
                 <Image
                   src={`/${badge.id}.png`}
                   alt={badge.name}

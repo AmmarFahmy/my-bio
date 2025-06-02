@@ -5,7 +5,7 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Ammar Fahmy - Senior AI/ML Engineer & Data Scientist',
+  title: 'Ammar Fahmy',
   description: 'Co-Creating the Future of Business with AI',
   keywords: 'Ammar Fahmy, AI Engineer, Machine Learning, Data Scientist, NLP, Artificial Intelligence, NeuroniumAI, LawMate, AI Consultant, ML Engineer, Deep Learning',
   authors: [{ name: 'Ammar Fahmy' }],
@@ -13,13 +13,13 @@ export const metadata = {
   openGraph: {
     type: 'profile',
     locale: 'en_US',
-    url: 'https://your-domain.com', // Replace with your actual domain
-    title: 'Ammar Fahmy - Senior AI/ML Engineer & Data Scientist',
+    url: 'https://ammarfahmy.info',
+    title: 'Ammar Fahmy',
     description: 'Co-Creating the Future of Business with AI',
     siteName: 'Ammar Fahmy Bio',
     images: [
       {
-        url: '/avatar.png',
+        url: 'https://ammarfahmy.info/avatar.png',
         width: 1200,
         height: 1200,
         alt: 'Ammar Fahmy Profile Picture',
@@ -29,9 +29,9 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Ammar Fahmy - Senior AI/ML Engineer & Data Scientist',
+    title: 'Ammar Fahmy',
     description: 'Co-Creating the Future of Business with AI',
-    images: ['/avatar.png'],
+    images: ['https://ammarfahmy.info/avatar.png'],
     creator: '@__sharling__',
   },
   robots: {
@@ -46,14 +46,12 @@ export const metadata = {
     },
   },
   icons: {
-    icon: '/avatar.svg',
-    shortcut: '/avatar.svg',
-    apple: '/avatar.svg',
+    icon: '/avatar.png',
+    shortcut: '/avatar.png',
+    apple: '/avatar.png',
   },
   verification: {
-    // Add your verification codes here when available
-    // google: 'your-google-verification-code',
-    // yandex: 'your-yandex-verification-code',
+    // DNS Verification is completed .. no need to add any verification codes
   },
 };
 
