@@ -12,7 +12,8 @@ import {
   FaFacebook,
   FaInstagram,
   FaShare,
-  FaCheck
+  FaCheck,
+  FaYoutube
 } from 'react-icons/fa';
 
 // Type for tile groups
@@ -102,6 +103,17 @@ export default function HomePage() {
         { label: 'NeuroniumAI | Facebook', url: 'https://www.facebook.com/neuroniumai', icon: <FaFacebook className="text-blue-700" /> },
         { label: 'NeuroniumAI | LinkedIn', url: 'https://www.linkedin.com/company/neuroniumai/', icon: <FaLinkedin className="text-blue-600" /> },
         { label: 'NeuroniumAI | E-Mail', url: 'mailto:hi@neuroniumai.com', icon: <FaEnvelope className="text-red-500" /> }
+      ]
+    },
+    {
+      heading: 'ESHIFT International Academy',
+      headingLogo: '/eshift.svg',
+      links: [
+        { label: 'ESHIFT | WhatsApp', url: 'https://wa.me/+94766062424', icon: <FaWhatsapp className="text-green-500" /> },
+        { label: 'ESHIFT | Website', url: 'https://eshiftacademy.edu.lk/', icon: <FaGlobe className="text-amber-600" /> },
+        { label: 'ESHIFT | Facebook', url: 'https://www.facebook.com/profile.php?id=61571169418944', icon: <FaFacebook className="text-blue-700" /> },
+        { label: 'ESHIFT | YouTube', url: 'https://youtube.com/@eshiftacademy?si=8OWzaUu8tQdy0RGa', icon: <FaYoutube className="text-red-600" /> },
+        { label: 'ESHIFT | E-Mail', url: 'mailto:ammar.mfahmy@gmail.com', icon: <FaEnvelope className="text-red-500" /> }
       ]
     }
   ];
