@@ -8,13 +8,13 @@ import {
   FaGithub,
   FaEnvelope,
   FaGlobe,
-  FaTwitter,
   FaFacebook,
   FaInstagram,
   FaShare,
   FaCheck,
   FaYoutube
 } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 
 // Type for tile groups
 interface TileGroup {
@@ -69,11 +69,30 @@ export default function HomePage() {
     }
   };
 
+  // Share profile with Web Share API (fallback to clipboard)
+  const shareProfile = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Ammar Fahmy',
+          text: 'Co-Creating the Future of Business with AI',
+          url: window.location.href,
+        });
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+        return;
+      }
+    } catch (e) {
+      // ignore user cancel and fallback
+    }
+    await copyToClipboard();
+  };
+
   // Personal social media links for grid display
   const personalLinks: PersonalLink[] = [
     { platform: 'WhatsApp', url: 'https://wa.me/+94766062424', icon: <FaWhatsapp />, hoverColor: 'hover:bg-green-500' },
     { platform: 'LinkedIn', url: 'https://www.linkedin.com/in/ammar-fahmy/', icon: <FaLinkedin />, hoverColor: 'hover:bg-blue-600' },
-    { platform: 'X', url: 'https://x.com/__sharling__', icon: <FaTwitter />, hoverColor: 'hover:bg-black' },
+    { platform: 'X', url: 'https://x.com/_ammar_fahmy_', icon: <FaXTwitter />, hoverColor: 'hover:bg-black' },
     { platform: 'Facebook', url: 'https://www.facebook.com/mfahmy.ammar/', icon: <FaFacebook />, hoverColor: 'hover:bg-blue-700' },
     { platform: 'GitHub', url: 'https://github.com/AmmarFahmy', icon: <FaGithub />, hoverColor: 'hover:bg-gray-800' },
     { platform: 'Email', url: 'mailto:ammar.mfahmy@gmail.com', icon: <FaEnvelope />, hoverColor: 'hover:bg-red-500' }
@@ -90,7 +109,7 @@ export default function HomePage() {
         { label: 'LawMate.lk | Facebook', url: 'https://www.facebook.com/lawmate.lk', icon: <FaFacebook className="text-blue-700" /> },
         { label: 'LawMate.lk | Instagram', url: 'https://www.instagram.com/lawmate.lk', icon: <FaInstagram className="text-pink-600" /> },
         { label: 'LawMate.lk | LinkedIn', url: 'https://www.linkedin.com/company/lawmate-srilanka/', icon: <FaLinkedin className="text-blue-600" /> },
-        { label: 'LawMate.lk | X', url: 'https://x.com/lawmate_lk', icon: <FaTwitter className="text-black" /> },
+        { label: 'LawMate.lk | X', url: 'https://x.com/lawmate_lk', icon: <FaXTwitter className="text-black" /> },
         { label: 'LawMate.lk | E-Mail', url: 'mailto:hi@lawmate.lk', icon: <FaEnvelope className="text-red-500" /> },
       ]
     },
@@ -110,9 +129,9 @@ export default function HomePage() {
       headingLogo: '/eshift.svg',
       links: [
         { label: 'ESHIFT | WhatsApp', url: 'https://wa.me/+94766062424', icon: <FaWhatsapp className="text-green-500" /> },
-        { label: 'ESHIFT | Website', url: 'https://eshiftacademy.edu.lk/', icon: <FaGlobe className="text-amber-600" /> },
+        { label: 'ESHIFT | Website', url: 'https://eshiftcampus.edu.lk/', icon: <FaGlobe className="text-amber-600" /> },
         { label: 'ESHIFT | Facebook', url: 'https://www.facebook.com/profile.php?id=61571169418944', icon: <FaFacebook className="text-blue-700" /> },
-        { label: 'ESHIFT | YouTube', url: 'https://youtube.com/@eshiftacademy?si=8OWzaUu8tQdy0RGa', icon: <FaYoutube className="text-red-600" /> },
+        { label: 'ESHIFT | YouTube', url: 'https://www.youtube.com/@Eshift-Campus', icon: <FaYoutube className="text-red-600" /> },
         { label: 'ESHIFT | E-Mail', url: 'mailto:ammar.mfahmy@gmail.com', icon: <FaEnvelope className="text-red-500" /> }
       ]
     }
@@ -124,10 +143,11 @@ export default function HomePage() {
       <div className="animate-fadeInUp">
         <Image
           src="/avatar.png"
-          alt="Profile avatar"
+          alt="Photo of Ammar Fahmy"
           width={140}
           height={140}
           priority
+          sizes="(max-width: 768px) 120px, 140px"
           className="rounded-full shadow-xl ring-4 ring-white"
         />
       </div>
@@ -137,15 +157,21 @@ export default function HomePage() {
       </div>
       
       <div className="animate-fadeInUp animation-delay-400">
-        <p className="text-center text-gray-600 text-sm md:text-base max-w-md">
-          Senior AI/ML Engineer | Lead Data Scientist | NLP Specialist | Certified AI Expert | Founder & CEO of NeuroniumAI, LawMate.lk | Head of IT @ ESHIFT | Co-Creating the Future of Business with AI
+        <div className="text-center text-gray-600 text-sm md:text-base max-w-md leading-relaxed space-y-1">
+          <p>Lead Data Scientist & Head of NLP @ Veracity Group</p>
+          <p>Founder & CEO of NeuroniumAI & LawMate.lk</p>
+          <p>AI Engineer @ TheVenture</p>
+          <p>Head of IT @ ESHIFT</p>
+        </div>
+        <p className="text-center text-gray-700 text-base md:text-lg max-w-md mt-4 font-medium">
+          Co-Creating the Future of Business with AI
         </p>
       </div>
 
       {/* Copy Profile Link Button */}
       <div className="animate-fadeInUp animation-delay-600">
         <button
-          onClick={copyToClipboard}
+          onClick={shareProfile}
           className={`
             flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
             transition-all duration-300 ease-out
@@ -167,6 +193,7 @@ export default function HomePage() {
               Share Profile
             </>
           )}
+          <span className="sr-only" aria-live="polite">{copySuccess ? 'Profile link copied' : ''}</span>
         </button>
       </div>
 
@@ -178,19 +205,20 @@ export default function HomePage() {
               key={link.platform}
               href={link.url}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="me noopener noreferrer"
               className={`
                 flex items-center justify-center w-14 h-14 rounded-full 
                 bg-white/90 backdrop-blur-sm shadow-lg border border-gray-200
                 transition-all duration-300 ease-out
                 hover:scale-110 hover:shadow-xl hover:text-white
                 ${link.hoverColor}
-                group animate-scaleIn
+                group animate-scaleIn focus:outline-none focus-visible:ring-4 focus-visible:ring-techblue-dark/50
               `}
               style={{ animationDelay: `${1000 + index * 100}ms` }}
               title={link.platform}
+              aria-label={link.platform}
             >
-              <span className="text-xl text-gray-700 group-hover:text-white transition-colors duration-300">
+              <span className="text-xl text-gray-700 group-hover:text-white transition-colors duration-300" aria-hidden="true">
                 {link.icon}
               </span>
             </a>
@@ -209,19 +237,26 @@ export default function HomePage() {
               key={badge.id}
               className="group relative animate-scaleIn"
               style={{ animationDelay: `${1400 + index * 150}ms` }}
+              tabIndex={0}
+              aria-describedby={`${badge.id}-tip`}
             >
-              <div className="relative overflow-hidden rounded-xl p-2 transition-all duration-300 hover:scale-110">
+              <div className="relative overflow-hidden rounded-xl p-2 transition-all duration-300 hover:scale-110 focus:scale-110">
                 <Image
-                  src={`/${badge.id}.png`}
+                  src={`/webp/${badge.id}.webp`}
                   alt={badge.name}
                   width={80}
                   height={80}
+                  sizes="80px"
                   className="w-full h-auto rounded-lg"
                 />
               </div>
               
               {/* Tooltip */}
-              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10">
+              <div
+                id={`${badge.id}-tip`}
+                role="tooltip"
+                className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10"
+              >
                 <div className="font-medium">{badge.name}</div>
                 <div className="text-gray-300">{badge.description}</div>
                 <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
