@@ -48,7 +48,7 @@ export default function HomePage() {
   // Achievement badges data
   const badges: Badge[] = [
     { id: 'badge0', name: 'Professional Data Scientist', description: 'Professional' },
-    { id: 'badge1', name: 'Data Engineering and Machine Learning using Spark', description: 'Skilled' },
+    { id: 'badge1', name: 'Data Engineering and Machine Learning using Apache Spark', description: 'Skilled' },
     { id: 'badge2', name: 'Deep Learning and Reinforcement Learning', description: 'Skilled' },
     { id: 'badge3', name: 'Machine Learning with Apache Spark', description: 'Skilled' },
     { id: 'badge4', name: 'Professional Data Analyst', description: 'Professional' },
