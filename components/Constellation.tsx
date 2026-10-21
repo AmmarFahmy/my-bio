@@ -14,10 +14,18 @@ type Pulse = { from: number; to: number; t: number; hops: number };
  * near a node sets that node off.
  *
  * Cost stays flat: edges are batched into a few alpha buckets (a handful of
- * strokes per frame rather than one per edge), every glow is one sprite
- * rendered up front and stamped with drawImage instead of shadowBlur,
- * phones run at 30fps with fewer nodes, and the loop stops while the tab is
- * hidden. Movement is time-based, so frame rate changes smoothness, not speed.
+ * strokes per frame rather than one per edge), and every glow is one sprite
+ * rendered up front and stamped with drawImage instead of shadowBlur.
+ *
+ * Measured, this canvas was ~60% of the main thread's work while scrolling
+ * on desktop — the same thread Lenis scrolls the page from, so the two
+ * fought and scrolling lagged. Hence three limits:
+ *   - it pauses while the page scrolls, and resumes once scrolling settles;
+ *   - it draws at most 30fps on every device (a 120Hz screen was drawing it
+ *     120 times a second);
+ *   - its backing store is capped at 1.25x — it's a soft backdrop, mostly
+ *     seen through glass, so the extra resolution bought nothing.
+ * Movement is time-based, so frame rate changes smoothness, not speed.
  */
 export default function Constellation() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -34,8 +42,9 @@ export default function Constellation() {
 
     const NODE_COUNT = compact ? 26 : 46;
     const LINK = compact ? 120 : 150;
-    const MAX_DPR = compact ? 1.5 : 2;
-    const FRAME_MS = compact ? 1000 / 30 : 0;
+    const MAX_DPR = 1.25;
+    const FRAME_MS = 1000 / 30;
+    const SCROLL_SETTLE_MS = 160; // quiet time after the last scroll before resuming
     const DRIFT = 6; // px per second, per axis, at most
     const PULSE_SPEED = compact ? 110 : 130; // px per second along an edge
     const PULSE_EVERY = compact ? 420 : 260; // ms between new signals
@@ -285,6 +294,16 @@ export default function Constellation() {
 
     const onVisibility = () => (document.hidden ? stop() : start());
 
+    // Hold still while the page scrolls, so the scroll gets the main thread
+    let settle: ReturnType<typeof setTimeout> | undefined;
+    const onScroll = () => {
+      stop();
+      clearTimeout(settle);
+      settle = setTimeout(() => {
+        if (!document.hidden) start();
+      }, SCROLL_SETTLE_MS);
+    };
+
     // Desktop only: the cursor links to nearby nodes, and moving it close to
     // one sets that node off. Throttled so a fast sweep can't flood the graph.
     const onPointerMove = (event: PointerEvent) => {
@@ -323,6 +342,7 @@ export default function Constellation() {
     for (let k = 0; k < 4; k++) spawn(); // alive from the first frame
     start();
     window.addEventListener('resize', resize);
+    window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('visibilitychange', onVisibility);
     if (finePointer) {
       window.addEventListener('pointermove', onPointerMove, { passive: true });
@@ -331,7 +351,9 @@ export default function Constellation() {
 
     return () => {
       stop();
+      clearTimeout(settle);
       window.removeEventListener('resize', resize);
+      window.removeEventListener('scroll', onScroll);
       document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerout', onPointerOut);

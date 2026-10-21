@@ -3,8 +3,11 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 
 /**
- * Weighted scrolling for mouse and trackpad only, tuned to match the
- * 1ClickLesson landing page (lerp 0.085).
+ * Weighted scrolling for mouse and trackpad only.
+ *
+ * lerp 0.12 rather than 1ClickLesson's 0.085: each frame the page closes
+ * that fraction of the remaining distance, and at 0.085 it visibly trails
+ * the wheel — which read as lag. 0.12 keeps the glide but answers sooner.
  *
  * Lenis is never created on touch devices — syncTouch: false is not enough.
  * Lenis registers touchstart/touchmove/touchend on window with
@@ -21,7 +24,7 @@ export default function SmoothScroll() {
 
     const lenis = new Lenis({
       autoRaf: true,
-      lerp: 0.085,
+      lerp: 0.12,
       // Lenis owns scroll position, so in-page anchors go through it
       anchors: { offset: -24 },
       stopInertiaOnNavigate: true,

@@ -19,7 +19,7 @@ export interface Venture {
 
 export default function VentureCard({ venture }: { venture: Venture }) {
   return (
-    <article className="glass spotlight w-full rounded-[28px] p-4 sm:p-5">
+    <article className="glass-adaptive spotlight w-full rounded-[28px] p-4 sm:p-5">
       <header className="flex items-center gap-3.5">
         {/* Light chip: the logos are dark marks drawn for a light page, and
             vanish straight onto the night glass */}

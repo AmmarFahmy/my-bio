@@ -124,19 +124,37 @@ export default function HomePage() {
 
   // Moves the glow inside whichever .spotlight card the pointer is over.
   // Pointer devices only — on touch there's no hover for it to follow.
+  // Batched to one update per frame: reading a card's position straight
+  // after a style write forces a synchronous layout, and pointer events can
+  // arrive several times a frame while the page scrolls under the cursor.
   useEffect(() => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    let pending: { card: HTMLElement; x: number; y: number } | null = null;
+    let frame = 0;
+
+    const apply = () => {
+      frame = 0;
+      if (!pending) return;
+      const { card, x, y } = pending;
+      pending = null;
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${x - rect.left}px`);
+      card.style.setProperty('--my', `${y - rect.top}px`);
+    };
 
     const onPointerMove = (event: PointerEvent) => {
       const card = (event.target as Element | null)?.closest<HTMLElement>('.spotlight');
       if (!card) return;
-      const rect = card.getBoundingClientRect();
-      card.style.setProperty('--mx', `${event.clientX - rect.left}px`);
-      card.style.setProperty('--my', `${event.clientY - rect.top}px`);
+      pending = { card, x: event.clientX, y: event.clientY };
+      if (!frame) frame = requestAnimationFrame(apply);
     };
 
     document.addEventListener('pointermove', onPointerMove, { passive: true });
-    return () => document.removeEventListener('pointermove', onPointerMove);
+    return () => {
+      document.removeEventListener('pointermove', onPointerMove);
+      cancelAnimationFrame(frame);
+    };
   }, []);
 
   // Current roles, shown under the name
@@ -327,7 +345,7 @@ export default function HomePage() {
               href={link.url}
               target="_blank"
               rel="me noopener noreferrer"
-              className="glass icon-btn enter enter-scale flex aspect-square w-full items-center justify-center rounded-full"
+              className="glass-lite icon-btn enter enter-scale flex aspect-square w-full items-center justify-center rounded-full"
               style={enterAt(T.social + index * 50)}
               title={link.platform}
               aria-label={link.platform}
@@ -367,7 +385,7 @@ export default function HomePage() {
               aria-describedby={`${badge.id}-tip`}
             >
               {/* Fixed square keeps the grid even despite mixed badge aspect ratios */}
-              <div className="glass spotlight flex aspect-square items-center justify-center rounded-2xl p-2.5">
+              <div className="glass-lite spotlight flex aspect-square items-center justify-center rounded-2xl p-2.5">
                 <Image
                   src={`/webp/${badge.id}.webp`}
                   alt={badge.name}
