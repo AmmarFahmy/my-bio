@@ -12,15 +12,27 @@ export default function LinkTile({ href, icon, children }: LinkTileProps) {
   return (
     <Link
       href={href}
-      className="group w-full max-w-md backdrop-blur bg-white/60 hover:bg-white/70 transition transform shadow-md flex items-center justify-between px-5 py-4 rounded-xl border border-white/80 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-lg hover:ring-2 hover:ring-techblue-dark/30 focus:outline-none focus-visible:ring-4 focus-visible:ring-techblue-dark/50 focus-visible:ring-offset-2"
+      className="group glass-solid glass-sheen glass-interactive shine flex w-full items-center justify-between gap-3 rounded-2xl px-4 py-3.5 sm:px-5 sm:py-4"
       target="_blank"
       rel="noopener noreferrer"
     >
-      <div className="flex items-center gap-3">
-        {icon && <span className="text-xl flex-shrink-0" aria-hidden="true">{icon}</span>}
-        <span className="font-medium text-gray-800 text-sm md:text-base">{children}</span>
-      </div>
-      <FiExternalLink className="w-5 h-5 text-gray-600 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+      <span className="flex min-w-0 items-center gap-3">
+        {icon && (
+          <span
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-white/[0.07] text-lg ring-1 ring-inset ring-white/10 transition-transform duration-300 ease-glass group-hover:scale-110"
+            aria-hidden="true"
+          >
+            {icon}
+          </span>
+        )}
+        <span className="truncate text-sm font-medium text-slate-100 sm:text-[0.95rem]">
+          {children}
+        </span>
+      </span>
+      <FiExternalLink
+        className="h-4 w-4 flex-shrink-0 text-slate-500 transition-all duration-300 ease-glass group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
+        aria-hidden="true"
+      />
     </Link>
   );
-} 
+}

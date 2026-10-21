@@ -1,7 +1,8 @@
 'use client';
 import Image from 'next/image';
 import LinkTile from '@/components/LinkTile';
-import { ReactNode, useState } from 'react';
+import AwardCard from '@/components/AwardCard';
+import { CSSProperties, Fragment, ReactNode, useEffect, useState } from 'react';
 import {
   FaWhatsapp,
   FaLinkedin,
@@ -42,8 +43,55 @@ interface Badge {
   description: string;
 }
 
+// Lets a stagger delay ride along in the style prop
+const delay = (ms: number) => ({ '--reveal-delay': `${ms}ms` }) as CSSProperties;
+
+// Splits a line into words so each can rise out of focus on its own beat.
+// Spaces stay outside the spans so the line still wraps normally.
+function Words({ text, start = 0, step = 80 }: { text: string; start?: number; step?: number }) {
+  const words = text.split(' ');
+  return (
+    <>
+      {words.map((word, index) => (
+        <Fragment key={`${word}-${index}`}>
+          <span className="word" style={{ '--w': `${start + index * step}ms` } as CSSProperties}>
+            {word}
+          </span>
+          {index < words.length - 1 ? ' ' : null}
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
 export default function HomePage() {
   const [copySuccess, setCopySuccess] = useState(false);
+
+  // Reveal sections as they scroll into view.
+  useEffect(() => {
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
+    if (!nodes.length) return;
+
+    // No IntersectionObserver (old Safari, some in-app browsers): show it all.
+    if (!('IntersectionObserver' in window)) {
+      nodes.forEach((node) => node.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+    );
+
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
 
   // Achievement badges data
   const badges: Badge[] = [
@@ -92,9 +140,9 @@ export default function HomePage() {
   const personalLinks: PersonalLink[] = [
     { platform: 'WhatsApp', url: 'https://wa.me/+94766062424', icon: <FaWhatsapp />, hoverColor: 'hover:bg-green-500' },
     { platform: 'LinkedIn', url: 'https://www.linkedin.com/in/ammar-fahmy/', icon: <FaLinkedin />, hoverColor: 'hover:bg-blue-600' },
-    { platform: 'X', url: 'https://x.com/_ammar_fahmy_', icon: <FaXTwitter />, hoverColor: 'hover:bg-black' },
+    { platform: 'X', url: 'https://x.com/_ammar_fahmy_', icon: <FaXTwitter />, hoverColor: 'hover:bg-white' },
     { platform: 'Facebook', url: 'https://www.facebook.com/mfahmy.ammar/', icon: <FaFacebook />, hoverColor: 'hover:bg-blue-700' },
-    { platform: 'GitHub', url: 'https://github.com/AmmarFahmy', icon: <FaGithub />, hoverColor: 'hover:bg-gray-800' },
+    { platform: 'GitHub', url: 'https://github.com/AmmarFahmy', icon: <FaGithub />, hoverColor: 'hover:bg-slate-200' },
     { platform: 'Email', url: 'mailto:ammar.mfahmy@gmail.com', icon: <FaEnvelope />, hoverColor: 'hover:bg-red-500' }
   ];
 
@@ -104,92 +152,89 @@ export default function HomePage() {
       heading: 'LawMate.lk',
       headingLogo: '/lawmate.svg',
       links: [
-        { label: 'LawMate.lk | WhatsApp', url: 'https://wa.me/+94777357075', icon: <FaWhatsapp className="text-green-500" /> },
-        { label: 'LawMate.lk | Website', url: 'https://lawmate.lk/', icon: <FaGlobe className="text-amber-600" /> },
-        { label: 'LawMate.lk | Facebook', url: 'https://www.facebook.com/lawmate.lk', icon: <FaFacebook className="text-blue-700" /> },
-        { label: 'LawMate.lk | Instagram', url: 'https://www.instagram.com/lawmate.lk', icon: <FaInstagram className="text-pink-600" /> },
-        { label: 'LawMate.lk | LinkedIn', url: 'https://www.linkedin.com/company/lawmate-srilanka/', icon: <FaLinkedin className="text-blue-600" /> },
-        { label: 'LawMate.lk | X', url: 'https://x.com/lawmate_lk', icon: <FaXTwitter className="text-black" /> },
-        { label: 'LawMate.lk | E-Mail', url: 'mailto:hi@lawmate.lk', icon: <FaEnvelope className="text-red-500" /> },
+        { label: 'LawMate.lk | WhatsApp', url: 'https://wa.me/+94777357075', icon: <FaWhatsapp className="text-green-400" /> },
+        { label: 'LawMate.lk | Website', url: 'https://lawmate.lk/', icon: <FaGlobe className="text-amber-400" /> },
+        { label: 'LawMate.lk | Facebook', url: 'https://www.facebook.com/lawmate.lk', icon: <FaFacebook className="text-blue-500" /> },
+        { label: 'LawMate.lk | Instagram', url: 'https://www.instagram.com/lawmate.lk', icon: <FaInstagram className="text-pink-500" /> },
+        { label: 'LawMate.lk | LinkedIn', url: 'https://www.linkedin.com/company/lawmate-srilanka/', icon: <FaLinkedin className="text-blue-400" /> },
+        { label: 'LawMate.lk | X', url: 'https://x.com/lawmate_lk', icon: <FaXTwitter className="text-white" /> },
+        { label: 'LawMate.lk | E-Mail', url: 'mailto:hi@lawmate.lk', icon: <FaEnvelope className="text-red-400" /> },
       ]
     },
     {
       heading: 'NeuroniumAI',
       headingLogo: '/neuroniumai.svg',
       links: [
-        { label: 'NeuroniumAI | WhatsApp', url: 'https://wa.me/+94777357075', icon: <FaWhatsapp className="text-green-500" /> },
-        { label: 'NeuroniumAI | Website', url: 'https://www.neuroniumai.com/', icon: <FaGlobe className="text-amber-600" /> },
-        { label: 'NeuroniumAI | Facebook', url: 'https://www.facebook.com/neuroniumai', icon: <FaFacebook className="text-blue-700" /> },
-        { label: 'NeuroniumAI | LinkedIn', url: 'https://www.linkedin.com/company/neuroniumai/', icon: <FaLinkedin className="text-blue-600" /> },
-        { label: 'NeuroniumAI | E-Mail', url: 'mailto:hi@neuroniumai.com', icon: <FaEnvelope className="text-red-500" /> }
+        { label: 'NeuroniumAI | WhatsApp', url: 'https://wa.me/+94777357075', icon: <FaWhatsapp className="text-green-400" /> },
+        { label: 'NeuroniumAI | Website', url: 'https://www.neuroniumai.com/', icon: <FaGlobe className="text-amber-400" /> },
+        { label: 'NeuroniumAI | Facebook', url: 'https://www.facebook.com/neuroniumai', icon: <FaFacebook className="text-blue-500" /> },
+        { label: 'NeuroniumAI | LinkedIn', url: 'https://www.linkedin.com/company/neuroniumai/', icon: <FaLinkedin className="text-blue-400" /> },
+        { label: 'NeuroniumAI | E-Mail', url: 'mailto:hi@neuroniumai.com', icon: <FaEnvelope className="text-red-400" /> }
       ]
     },
     {
       heading: 'ESHIFT International Academy',
       headingLogo: '/eshift.svg',
       links: [
-        { label: 'ESHIFT | WhatsApp', url: 'https://wa.me/+94766062424', icon: <FaWhatsapp className="text-green-500" /> },
-        { label: 'ESHIFT | Website', url: 'https://eshiftcampus.edu.lk/', icon: <FaGlobe className="text-amber-600" /> },
-        { label: 'ESHIFT | Facebook', url: 'https://www.facebook.com/profile.php?id=61571169418944', icon: <FaFacebook className="text-blue-700" /> },
-        { label: 'ESHIFT | YouTube', url: 'https://www.youtube.com/@Eshift-Campus', icon: <FaYoutube className="text-red-600" /> },
-        { label: 'ESHIFT | E-Mail', url: 'mailto:ammar.mfahmy@gmail.com', icon: <FaEnvelope className="text-red-500" /> }
+        { label: 'ESHIFT | WhatsApp', url: 'https://wa.me/+94766062424', icon: <FaWhatsapp className="text-green-400" /> },
+        { label: 'ESHIFT | Website', url: 'https://eshiftcampus.edu.lk/', icon: <FaGlobe className="text-amber-400" /> },
+        { label: 'ESHIFT | Facebook', url: 'https://www.facebook.com/profile.php?id=61571169418944', icon: <FaFacebook className="text-blue-500" /> },
+        { label: 'ESHIFT | YouTube', url: 'https://www.youtube.com/@Eshift-Campus', icon: <FaYoutube className="text-red-500" /> },
+        { label: 'ESHIFT | E-Mail', url: 'mailto:ammar.mfahmy@gmail.com', icon: <FaEnvelope className="text-red-400" /> }
       ]
     }
   ];
 
   return (
-    <main className="flex flex-col items-center w-full max-w-2xl gap-6 pb-12">
-      {/* Profile Section with Animation */}
+    <main className="relative z-10 flex w-full max-w-2xl flex-col items-center gap-7 pb-16">
+      {/* Profile */}
       <div className="animate-fadeInUp">
-        <Image
-          src="/avatar.png"
-          alt="Photo of Ammar Fahmy"
-          width={140}
-          height={140}
-          priority
-          sizes="(max-width: 768px) 120px, 140px"
-          className="rounded-full shadow-xl ring-4 ring-white"
-        />
+        <div className="avatar-ring">
+          <Image
+            src="/avatar.png"
+            alt="Photo of Ammar Fahmy"
+            width={140}
+            height={140}
+            priority
+            sizes="(max-width: 640px) 112px, 140px"
+            className="block h-28 w-28 rounded-full object-cover sm:h-[140px] sm:w-[140px]"
+          />
+        </div>
       </div>
-      
-      <div className="animate-fadeInUp animation-delay-200">
-        <h1 className="text-xl md:text-2xl font-semibold text-gray-800 text-center">Ammar Fahmy</h1>
-      </div>
-      
-      <div className="animate-fadeInUp animation-delay-400">
-        <div className="text-center text-gray-600 text-sm md:text-base max-w-md leading-relaxed space-y-1">
-          <p>Lead Data Scientist & Head of NLP @ Veracity Group</p>
-          <p>Founder & CEO of NeuroniumAI & LawMate.lk</p>
-          <p>AI Engineer @ TheVenture</p>
+
+      <div className="flex flex-col items-center gap-4">
+        <h1 className="text-center text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          <Words text="Ammar Fahmy" start={150} step={110} />
+        </h1>
+
+        <div className="animate-fadeInUp animation-delay-400 max-w-md space-y-1 text-center text-sm leading-relaxed text-slate-400">
+          <p>Founder &amp; CEO of NeuroniumAI &amp; LawMate.lk</p>
+          <p>Co-Founder &amp; CAiO of QurraAI</p>
+          <p>AI Engineer @ TheVenture &amp; Innodata</p>
           <p>Head of IT @ ESHIFT</p>
         </div>
-        <p className="text-center text-gray-700 text-base md:text-lg max-w-md mt-4 font-medium">
-          Co-Creating the Future of Business with AI
+
+        <p className="max-w-md text-center text-base font-medium text-slate-100 sm:text-lg">
+          <Words text="Co-Creating the Future of Business with AI" start={620} step={60} />
         </p>
       </div>
 
-      {/* Copy Profile Link Button */}
-      <div className="animate-fadeInUp animation-delay-600">
+      {/* Share */}
+      <div className="animate-fadeInUp animation-delay-800">
         <button
           onClick={shareProfile}
-          className={`
-            flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
-            transition-all duration-300 ease-out
-            ${copySuccess 
-              ? 'bg-green-500 text-white' 
-              : 'bg-white/90 text-gray-700 hover:bg-white hover:shadow-lg'
-            }
-            backdrop-blur-sm shadow-md border border-gray-200
-          `}
+          className={`glass glass-sheen glass-interactive flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium ${
+            copySuccess ? 'text-green-300' : 'text-slate-200'
+          }`}
         >
           {copySuccess ? (
             <>
-              <FaCheck className="text-sm" />
+              <FaCheck className="text-sm" aria-hidden="true" />
               Profile Copied!
             </>
           ) : (
             <>
-              <FaShare className="text-sm" />
+              <FaShare className="text-sm" aria-hidden="true" />
               Share Profile
             </>
           )}
@@ -197,28 +242,25 @@ export default function HomePage() {
         </button>
       </div>
 
-      {/* Personal Social Links Grid */}
-      <section className="w-full mt-4 animate-fadeInUp animation-delay-800">
-        <div className="grid grid-cols-6 gap-4 justify-items-center max-w-sm mx-auto">
+      {/* Personal social links */}
+      <section className="animate-fadeInUp animation-delay-800 w-full">
+        {/* max-w-md fits all six on one row at sm+; narrower phones wrap cleanly */}
+        <div className="mx-auto flex max-w-md flex-wrap items-center justify-center gap-2.5 sm:gap-3.5">
           {personalLinks.map((link, index) => (
             <a
               key={link.platform}
               href={link.url}
               target="_blank"
               rel="me noopener noreferrer"
-              className={`
-                flex items-center justify-center w-14 h-14 rounded-full 
-                bg-white/90 backdrop-blur-sm shadow-lg border border-gray-200
-                transition-all duration-300 ease-out
-                hover:scale-110 hover:shadow-xl hover:text-white
-                ${link.hoverColor}
-                group animate-scaleIn focus:outline-none focus-visible:ring-4 focus-visible:ring-techblue-dark/50
-              `}
-              style={{ animationDelay: `${1000 + index * 100}ms` }}
+              className={`glass glass-sheen glass-interactive group flex h-12 w-12 items-center justify-center rounded-full hover:text-ink-950 sm:h-14 sm:w-14 ${link.hoverColor} animate-scaleIn`}
+              style={{ animationDelay: `${950 + index * 80}ms` }}
               title={link.platform}
               aria-label={link.platform}
             >
-              <span className="text-xl text-gray-700 group-hover:text-white transition-colors duration-300" aria-hidden="true">
+              <span
+                className="text-xl text-slate-300 transition-colors duration-300 group-hover:text-ink-950"
+                aria-hidden="true"
+              >
                 {link.icon}
               </span>
             </a>
@@ -226,73 +268,81 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Skills & Achievement Badges Section */}
-      <section className="w-full mt-8 animate-fadeInUp animation-delay-1200">
-        <h2 className="text-center text-lg font-semibold text-gray-800 mb-6">
-          Skills, eBadges & Recognitions
+      {/* Award */}
+      <section className="reveal mt-4 w-full" style={delay(0)} aria-labelledby="recognition-heading">
+        <h2 id="recognition-heading" className="sr-only">
+          Recognition
         </h2>
-        <div className="grid grid-cols-3 md:grid-cols-5 gap-4 justify-items-center max-w-lg mx-auto">
-          {badges.map((badge, index) => (
+        <AwardCard />
+      </section>
+
+      {/* Skills & badges */}
+      <section className="reveal mt-4 w-full" style={delay(80)}>
+        <h2 className="mb-6 text-center text-base font-semibold tracking-tight text-slate-200 sm:text-lg">
+          Skills, eBadges &amp; Recognitions
+        </h2>
+        <div className="mx-auto grid max-w-lg grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4">
+          {badges.map((badge) => (
             <div
               key={badge.id}
-              className="group relative animate-scaleIn"
-              style={{ animationDelay: `${1400 + index * 150}ms` }}
+              className="group relative"
               tabIndex={0}
               aria-describedby={`${badge.id}-tip`}
             >
-              <div className="relative overflow-hidden rounded-xl p-2 transition-all duration-300 hover:scale-110 focus:scale-110">
+              {/* Fixed square keeps the grid even despite mixed badge aspect ratios */}
+              <div className="glass-solid glass-sheen glass-interactive flex aspect-square items-center justify-center rounded-2xl p-2.5">
                 <Image
                   src={`/webp/${badge.id}.webp`}
                   alt={badge.name}
                   width={80}
                   height={80}
-                  sizes="80px"
-                  className="w-full h-auto rounded-lg"
+                  sizes="(max-width: 640px) 25vw, 96px"
+                  className="h-full w-full object-contain"
                 />
               </div>
-              
-              {/* Tooltip */}
+
+              {/* Tooltip — opens on hover and on tap, since the wrapper is focusable */}
               <div
                 id={`${badge.id}-tip`}
                 role="tooltip"
-                className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10"
+                className="glass-solid pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-44 -translate-x-1/2 rounded-xl px-3 py-2 text-center text-xs opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
               >
-                <div className="font-medium">{badge.name}</div>
-                <div className="text-gray-300">{badge.description}</div>
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                <div className="font-medium text-slate-100">{badge.name}</div>
+                <div className="text-slate-400">{badge.description}</div>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Business Links Section */}
-      <section className="flex flex-col items-center w-full gap-8 mt-8 animate-fadeInUp animation-delay-1600">
+      {/* Business links */}
+      <section className="mt-4 flex w-full flex-col items-center gap-9">
         {businessTiles.map((group, groupIndex) => (
-          <div 
-            key={group.heading} 
-            className="flex flex-col items-center w-full gap-4 animate-slideInLeft"
-            style={{ animationDelay: `${1800 + groupIndex * 300}ms` }}
+          <div
+            key={group.heading}
+            className="reveal cv-auto flex w-full flex-col items-center gap-4"
+            style={delay(groupIndex * 60)}
           >
             {(group.heading || group.headingLogo) && (
-              <h2 className="flex items-center justify-center gap-2 text-sm font-medium uppercase tracking-wide text-gray-700/80 text-center">
+              <h2 className="flex items-center justify-center gap-2 text-center text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
                 {group.headingLogo && (
-                  <Image src={group.headingLogo} alt={group.heading} width={24} height={24} className="h-6 w-6" />
+                  <Image
+                    src={group.headingLogo}
+                    alt=""
+                    width={24}
+                    height={24}
+                    className="h-5 w-5"
+                    aria-hidden="true"
+                  />
                 )}
                 {group.heading}
               </h2>
             )}
-            <div className="flex flex-col items-center w-full gap-3">
-              {group.links.map((link, linkIndex) => (
-                <div
-                  key={link.label}
-                  className="animate-slideInRight w-full flex justify-center"
-                  style={{ animationDelay: `${2000 + groupIndex * 300 + linkIndex * 100}ms` }}
-                >
-                  <LinkTile href={link.url} icon={link.icon}>
-                    {link.label}
-                  </LinkTile>
-                </div>
+            <div className="flex w-full flex-col items-center gap-2.5">
+              {group.links.map((link) => (
+                <LinkTile key={link.label} href={link.url} icon={link.icon}>
+                  {link.label}
+                </LinkTile>
               ))}
             </div>
           </div>
@@ -300,4 +350,4 @@ export default function HomePage() {
       </section>
     </main>
   );
-} 
+}

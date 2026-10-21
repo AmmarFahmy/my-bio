@@ -2,112 +2,659 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------------------------------------------------------------
+   Design tokens — dark glass
+   --------------------------------------------------------------- */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.055);
+  --glass-bg-hover: rgba(255, 255, 255, 0.095);
+  --glass-border: rgba(255, 255, 255, 0.11);
+  --glass-border-hover: rgba(255, 255, 255, 0.22);
+  --glass-blur: 20px;
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.38);
+  --glass-shadow-hover: 0 16px 44px rgba(0, 0, 0, 0.48);
+  --accent: #f5b73d;
+  --ease-glass: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: 'Inter', system-ui, sans-serif;
+  background-color: #05060b;
+  color: #f1f5f9;
+}
+
+html {
+  /* No `scroll-behavior: smooth` — Lenis drives scrolling on pointer devices
+     and the two fight each other. The reduced-motion block below restores it
+     for anyone Lenis is disabled for. */
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* Custom Animations */
+::selection {
+  background: rgba(245, 183, 61, 0.3);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #05060b;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  border: 2px solid #05060b;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+/* ---------------------------------------------------------------
+   Aurora backdrop — the light behind the glass
+   --------------------------------------------------------------- */
+.aurora {
+  position: fixed;
+  inset: 0;
+  /* Stays at 0 rather than -1: a negative index would drop it behind the
+     opaque body background. Content sits above it on z-10. */
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% 0%, #0d1428 0%, #05060b 60%),
+    #05060b;
+}
+
+/* No `filter: blur()` here, deliberately. These are animated with scale(),
+   and scaling a blurred element changes the filter's input size every frame,
+   so the result can never be cached — it re-renders a 670px blur continuously
+   and drops scrolling to ~29fps. A multi-stop radial gradient is already soft
+   and costs nothing, so the blob is painted soft instead of blurred soft. */
+/* Parallax target. Separating this from the blob lets the scroll offset and
+   the drift animation each own a transform without overwriting each other. */
+.aurora-layer {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  opacity: 0.55;
+  will-change: transform;
+}
+
+/* Neural constellation canvas */
+.constellation {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* Reading progress */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.scroll-progress__bar {
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, #4f46e5, #06b6d4 45%, var(--accent));
+  box-shadow: 0 0 12px rgba(245, 183, 61, 0.5);
+}
+
+.aurora-blob--one {
+  width: 42rem;
+  height: 42rem;
+  top: -14rem;
+  left: -12rem;
+  background: radial-gradient(
+    circle closest-side,
+    rgba(79, 70, 229, 0.62),
+    rgba(79, 70, 229, 0.3) 42%,
+    rgba(79, 70, 229, 0.08) 68%,
+    transparent 85%
+  );
+  animation: drift-one 26s ease-in-out infinite;
+}
+
+.aurora-blob--two {
+  width: 36rem;
+  height: 36rem;
+  top: 24%;
+  right: -14rem;
+  background: radial-gradient(
+    circle closest-side,
+    rgba(6, 182, 212, 0.48),
+    rgba(6, 182, 212, 0.22) 42%,
+    rgba(6, 182, 212, 0.06) 68%,
+    transparent 85%
+  );
+  animation: drift-two 32s ease-in-out infinite;
+}
+
+.aurora-blob--three {
+  width: 34rem;
+  height: 34rem;
+  bottom: -12rem;
+  left: 15%;
+  background: radial-gradient(
+    circle closest-side,
+    rgba(124, 58, 237, 0.5),
+    rgba(124, 58, 237, 0.24) 42%,
+    rgba(124, 58, 237, 0.07) 68%,
+    transparent 85%
+  );
+  animation: drift-three 29s ease-in-out infinite;
+}
+
+@keyframes drift-one {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(5rem, 3rem, 0) scale(1.12); }
+}
+@keyframes drift-two {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-4rem, 4rem, 0) scale(1.08); }
+}
+@keyframes drift-three {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(3rem, -3.5rem, 0) scale(1.14); }
+}
+
+/* ---------------------------------------------------------------
+   Glass surfaces
+
+   Two variants, and the split is what keeps scrolling at 60fps:
+
+   .glass       real backdrop-filter. Every one of these has to re-sample
+                the animated backdrop on each frame, so it is reserved for
+                the few small, prominent controls where the blur reads.
+   .glass-solid same look built from layered translucent gradients. No
+                re-sampling, so it costs nothing to scroll. Used for the
+                ~35 repeated tiles, where against a smooth dark backdrop
+                the difference is imperceptible.
+   --------------------------------------------------------------- */
+@layer components {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+
+  .glass-solid {
+    background:
+      linear-gradient(
+        160deg,
+        rgba(255, 255, 255, 0.08),
+        rgba(255, 255, 255, 0.022) 45%,
+        rgba(255, 255, 255, 0.05)
+      ),
+      rgba(13, 17, 30, 0.58);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  /* Top-edge highlight — reads as light catching a real pane */
+  .glass-sheen {
+    position: relative;
+    isolation: isolate;
+  }
+  .glass-sheen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.34),
+      rgba(255, 255, 255, 0.02) 42%,
+      transparent 70%
+    );
+    /* Both the prefixed and standard mask are needed: mask-composite has
+       nothing to act on without `mask`, and the gradient renders unmasked. */
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .glass-interactive {
+    transition:
+      background-color 0.4s var(--ease-glass),
+      border-color 0.4s var(--ease-glass),
+      box-shadow 0.4s var(--ease-glass),
+      transform 0.4s var(--ease-glass);
+  }
+}
+
+/* Pointer-only affordances: never leave a phone stuck in :hover */
+@media (hover: hover) and (pointer: fine) {
+  .glass-interactive:hover {
+    background-color: var(--glass-bg-hover);
+    border-color: var(--glass-border-hover);
+    box-shadow: var(--glass-shadow-hover);
+    transform: translateY(-3px);
+  }
+}
+
+/* Touch gets a press state instead */
+.glass-interactive:active {
+  transform: scale(0.985);
+}
+
+/* ---------------------------------------------------------------
+   Motion — every keyframe below animates transform/opacity only,
+   so none of it touches layout or paint during scroll.
+   --------------------------------------------------------------- */
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translate3d(0, 26px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
 @keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.82); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+@keyframes breathe {
+  0%, 100% { opacity: 0.35; transform: scale(0.94); }
+  50% { opacity: 0.9; transform: scale(1.06); }
 }
 
-/* Animation Classes */
+@keyframes float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -3px, 0); }
+}
+
+@keyframes sweep {
+  from { transform: translate3d(-180%, 0, 0) skewX(-18deg); }
+  to { transform: translate3d(320%, 0, 0) skewX(-18deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -160% 0; }
+  100% { background-position: 260% 0; }
+}
+
 .animate-fadeInUp {
-  animation: fadeInUp 0.8s ease-out forwards;
+  animation: fadeInUp 0.85s var(--ease-glass) forwards;
   opacity: 0;
 }
 
 .animate-scaleIn {
-  animation: scaleIn 0.6s ease-out forwards;
+  animation: scaleIn 0.65s var(--ease-glass) forwards;
   opacity: 0;
 }
 
-.animate-slideInLeft {
-  animation: slideInLeft 0.7s ease-out forwards;
+.animate-float {
+  animation: float 3.6s ease-in-out infinite;
+}
+
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-600 { animation-delay: 600ms; }
+.animation-delay-800 { animation-delay: 800ms; }
+
+/* --- Avatar: slowly rotating gradient ring ---------------------- */
+.avatar-ring {
+  position: relative;
+  border-radius: 9999px;
+  padding: 3px;
+  isolation: isolate;
+}
+
+.avatar-ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    #4f46e5,
+    #06b6d4,
+    var(--accent),
+    #7c3aed,
+    #4f46e5
+  );
+  animation: spin 9s linear infinite;
+  z-index: -1;
+}
+
+.avatar-ring::after {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(79, 70, 229, 0.45), transparent 68%);
+  filter: blur(12px);
+  animation: breathe 6s ease-in-out infinite;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* --- Award card: light travelling around the border -------------
+   The angle is animated, not the element. Rotating the box with
+   transform would swing the masked border off a non-square card;
+   animating the gradient's own angle keeps it on the edge.
+   Browsers without @property support just hold it at 0deg, which
+   leaves a static highlight rather than a broken one. */
+@property --ring-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.award-ring {
+  position: relative;
+  isolation: isolate;
+}
+
+.award-ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--ring-angle),
+    transparent 0deg,
+    rgba(245, 183, 61, 0.95) 38deg,
+    rgba(255, 255, 255, 0.75) 62deg,
+    rgba(245, 183, 61, 0.5) 88deg,
+    transparent 150deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: ring-travel 7s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes ring-travel {
+  to { --ring-angle: 360deg; }
+}
+
+/* --- Award category: the glowing line --------------------------- */
+.category-chip {
+  position: relative;
+  isolation: isolate;
+  text-shadow:
+    0 0 10px rgba(245, 183, 61, 0.65),
+    0 0 28px rgba(245, 183, 61, 0.35);
+}
+
+/* Static element, so a blur() here is cached once and costs nothing to
+   scroll — only opacity/scale animate. */
+.category-chip::before {
+  content: '';
+  position: absolute;
+  inset: -55% -14%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(245, 183, 61, 0.72),
+    rgba(245, 183, 61, 0.22) 45%,
+    transparent 72%
+  );
+  filter: blur(12px);
+  animation: breathe 3.4s ease-in-out infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* --- Hover shine that sweeps a tile ----------------------------- */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 42%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.13),
+    transparent
+  );
+  transform: translate3d(-180%, 0, 0) skewX(-18deg);
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .shine:hover::after {
+    animation: sweep 0.9s var(--ease-glass);
+  }
+}
+
+/* --- Hero: words rise out of focus ------------------------------ */
+@keyframes wordRise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.55em, 0);
+    filter: blur(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+.word {
+  display: inline-block;
+  animation: wordRise 0.9s var(--ease-glass) backwards;
+  animation-delay: var(--w, 0ms);
+}
+
+/* --- Award card: cursor-follow tilt ----------------------------- */
+.tilt {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.5s var(--ease-glass);
+}
+
+/* While the cursor is on the card, follow it immediately; the transition
+   above only runs for the settle-back when the cursor leaves. */
+.tilt.is-tilting {
+  transition: none;
+}
+
+/* --- Award card: one-shot sparkle burst ------------------------- */
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 0 8px 2px rgba(245, 183, 61, 0.75);
   opacity: 0;
+  pointer-events: none;
+  z-index: 3;
 }
 
-.animate-slideInRight {
-  animation: slideInRight 0.6s ease-out forwards;
-  opacity: 0;
+.is-visible .sparkle {
+  animation: sparkle 1.5s ease-out var(--sd, 0ms) 1 forwards;
 }
 
-/* Animation Delays */
-.animation-delay-200 {
-  animation-delay: 200ms;
+@keyframes sparkle {
+  0% { opacity: 0; transform: scale(0.3) translate3d(0, 0, 0); }
+  35% { opacity: 1; transform: scale(1.15) translate3d(0, -4px, 0); }
+  100% { opacity: 0; transform: scale(0.4) translate3d(0, -16px, 0); }
 }
 
-.animation-delay-400 {
-  animation-delay: 400ms;
+/* --- Title shine, once, on reveal ------------------------------- */
+.award-shine {
+  background: linear-gradient(
+    100deg,
+    #ffffff 18%,
+    var(--accent) 38%,
+    #fff3d6 50%,
+    var(--accent) 62%,
+    #ffffff 82%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-.animation-delay-600 {
-  animation-delay: 600ms;
+.is-visible .award-shine {
+  animation: shimmer 3.4s var(--ease-glass) 0.35s 1 forwards;
 }
 
-.animation-delay-800 {
-  animation-delay: 800ms;
+/* ---------------------------------------------------------------
+   Scroll reveal — driven by IntersectionObserver in page.tsx.
+   Scoped to no-preference so reduced-motion users get everything up
+   front; the layout ships a <noscript> override for JS-off visitors.
+   --------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    transition:
+      opacity 0.75s var(--ease-glass),
+      transform 0.75s var(--ease-glass);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
-.animation-delay-1200 {
-  animation-delay: 1200ms;
+/* Lets the browser skip layout/paint for link groups that are offscreen.
+   `auto` remembers the last measured height, so the scrollbar stays put. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
 }
 
-.animation-delay-1600 {
-  animation-delay: 1600ms;
+/* ---------------------------------------------------------------
+   Mobile tuning
+   --------------------------------------------------------------- */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
 }
 
-/* Respect reduced motion preferences */
+@media (max-width: 640px) {
+  :root {
+    --glass-blur: 14px;
+    --glass-shadow: 0 6px 22px rgba(0, 0, 0, 0.34);
+  }
+
+  .aurora-blob {
+    opacity: 0.45;
+  }
+}
+
+/* Older/low-power engines without backdrop-filter still need contrast */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: rgba(18, 23, 38, 0.92);
+  }
+}
+
+/* ---------------------------------------------------------------
+   Accessibility
+   --------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
     animation: none !important;
     transition: none !important;
+  }
+
+  .award-shine {
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    color: var(--accent);
+  }
+
+  /* Keep the glow readable as a steady state rather than a pulse */
+  .avatar-ring::after,
+  .category-chip::before {
+    opacity: 0.6;
   }
 }
