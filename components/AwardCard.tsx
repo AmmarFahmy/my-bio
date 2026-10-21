@@ -19,17 +19,19 @@ const award = {
   facebook: 'https://www.facebook.com/share/p/1C5GDcj3kU/',
 };
 
-// Burst positions, fired once when the card scrolls into view
+// Fired once when the card scrolls into view, overlapping so there is almost
+// always a star twinkling somewhere across the run.
 const sparkles = [
-  { top: '12%', left: '8%', delay: 520 },
-  { top: '26%', left: '52%', delay: 900 },
-  { top: '64%', left: '38%', delay: 700 },
-  { top: '18%', left: '88%', delay: 1120 },
-  { top: '78%', left: '72%', delay: 1000 },
-  { top: '46%', left: '94%', delay: 1280 },
+  { top: '14%', left: '84%', delay: 500 },
+  { top: '68%', left: '30%', delay: 850 },
+  { top: '34%', left: '58%', delay: 1150 },
+  { top: '80%', left: '66%', delay: 1450 },
+  { top: '22%', left: '44%', delay: 1750 },
+  { top: '52%', left: '90%', delay: 2050 },
+  { top: '44%', left: '14%', delay: 2350 },
 ];
 
-const MAX_TILT = 5;
+const MAX_TILT = 3;
 
 export default function AwardCard() {
   const cardRef = useRef<HTMLElement>(null);

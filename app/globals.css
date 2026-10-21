@@ -31,6 +31,12 @@ html {
      and the two fight each other. The reduced-motion block below restores it
      for anyone Lenis is disabled for. */
   -webkit-text-size-adjust: 100%;
+
+  /* Belt and braces against sideways panning on phones. `clip` rather than
+     `hidden` because hidden still creates a scroll container that some mobile
+     engines will happily pan; clip cannot be scrolled at all. Older engines
+     ignore it and fall back to overflow-x:hidden on body. */
+  overflow-x: clip;
 }
 
 /* Lenis */
@@ -463,6 +469,53 @@ body {
   pointer-events: none;
 }
 
+/* --- Badge tooltips --------------------------------------------
+   Centering a 176px tooltip on a badge in the first or last grid
+   column pushes it past the viewport. It is invisible (opacity 0) but
+   still contributes scrollable width, which lets the whole page pan
+   sideways on a phone. Edge columns anchor to their own edge instead
+   of centering, so nothing ever sticks out. */
+.badge-tip {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 2rem);
+}
+
+/* 3 columns on phones */
+.badge:nth-child(3n + 1) .badge-tip {
+  left: 0;
+  right: auto;
+  transform: none;
+}
+
+.badge:nth-child(3n) .badge-tip {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+/* 5 columns from sm up — re-centre, then re-anchor the new edges */
+@media (min-width: 640px) {
+  .badge .badge-tip {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .badge:nth-child(5n + 1) .badge-tip {
+    left: 0;
+    right: auto;
+    transform: none;
+  }
+
+  .badge:nth-child(5n) .badge-tip {
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+}
+
 /* --- Hover shine that sweeps a tile ----------------------------- */
 .shine {
   position: relative;
@@ -516,7 +569,7 @@ body {
 .tilt {
   transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   transform-style: preserve-3d;
-  transition: transform 0.5s var(--ease-glass);
+  transition: transform 0.7s var(--ease-glass);
 }
 
 /* While the cursor is on the card, follow it immediately; the transition
@@ -526,26 +579,35 @@ body {
 }
 
 /* --- Award card: one-shot sparkle burst ------------------------- */
+/* Four-point star rather than a dot — closer to what the glow already
+   read as, and it holds the shape at the larger size. */
 .sparkle {
   position: absolute;
-  width: 4px;
-  height: 4px;
-  border-radius: 9999px;
-  background: #fff;
-  box-shadow: 0 0 8px 2px rgba(245, 183, 61, 0.75);
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle at 50% 50%, #fffdf5 0%, #ffe9b0 35%, var(--accent) 70%);
+  clip-path: polygon(
+    50% 0%, 60% 40%, 100% 50%, 60% 60%,
+    50% 100%, 40% 60%, 0% 50%, 40% 40%
+  );
+  filter: drop-shadow(0 0 6px rgba(245, 183, 61, 0.9));
   opacity: 0;
   pointer-events: none;
   z-index: 3;
 }
 
 .is-visible .sparkle {
-  animation: sparkle 1.5s ease-out var(--sd, 0ms) 1 forwards;
+  animation: sparkle 2.4s ease-in-out var(--sd, 0ms) 1 forwards;
 }
 
+/* Two peaks, so it reads as a twinkle rather than a single flash */
 @keyframes sparkle {
-  0% { opacity: 0; transform: scale(0.3) translate3d(0, 0, 0); }
-  35% { opacity: 1; transform: scale(1.15) translate3d(0, -4px, 0); }
-  100% { opacity: 0; transform: scale(0.4) translate3d(0, -16px, 0); }
+  0% { opacity: 0; transform: scale(0.2) rotate(0deg); }
+  16% { opacity: 1; transform: scale(1.25) rotate(35deg); }
+  34% { opacity: 0.3; transform: scale(0.8) rotate(70deg); }
+  54% { opacity: 1; transform: scale(1.1) rotate(110deg); }
+  74% { opacity: 0.35; transform: scale(0.85) rotate(145deg); }
+  100% { opacity: 0; transform: scale(0.35) rotate(180deg); }
 }
 
 /* --- Title shine, once, on reveal ------------------------------- */

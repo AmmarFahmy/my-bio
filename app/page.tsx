@@ -173,7 +173,7 @@ export default function HomePage() {
       ]
     },
     {
-      heading: 'ESHIFT International Academy',
+      heading: 'ESHIFT Campus of Higher Studies',
       headingLogo: '/eshift.svg',
       links: [
         { label: 'ESHIFT | WhatsApp', url: 'https://wa.me/+94766062424', icon: <FaWhatsapp className="text-green-400" /> },
@@ -211,7 +211,7 @@ export default function HomePage() {
           <p>Founder &amp; CEO of NeuroniumAI &amp; LawMate.lk</p>
           <p>Co-Founder &amp; CAiO of QurraAI</p>
           <p>AI Engineer @ TheVenture &amp; Innodata</p>
-          <p>Head of IT @ ESHIFT</p>
+          <p>Head of IT @ ESHIFT Campus</p>
         </div>
 
         <p className="max-w-md text-center text-base font-medium text-slate-100 sm:text-lg">
@@ -244,15 +244,17 @@ export default function HomePage() {
 
       {/* Personal social links */}
       <section className="animate-fadeInUp animation-delay-800 w-full">
-        {/* max-w-md fits all six on one row at sm+; narrower phones wrap cleanly */}
-        <div className="mx-auto flex max-w-md flex-wrap items-center justify-center gap-2.5 sm:gap-3.5">
+        {/* A 6-column grid rather than a wrapping flex row: the cells scale with
+            the viewport, so all six stay on one line even at 320px instead of
+            breaking to an awkward 5 + 1. */}
+        <div className="mx-auto grid w-full max-w-[20rem] grid-cols-6 gap-2 sm:max-w-[23rem] sm:gap-3">
           {personalLinks.map((link, index) => (
             <a
               key={link.platform}
               href={link.url}
               target="_blank"
               rel="me noopener noreferrer"
-              className={`glass glass-sheen glass-interactive group flex h-12 w-12 items-center justify-center rounded-full hover:text-ink-950 sm:h-14 sm:w-14 ${link.hoverColor} animate-scaleIn`}
+              className={`glass glass-sheen glass-interactive group flex aspect-square w-full items-center justify-center rounded-full hover:text-ink-950 ${link.hoverColor} animate-scaleIn`}
               style={{ animationDelay: `${950 + index * 80}ms` }}
               title={link.platform}
               aria-label={link.platform}
@@ -285,7 +287,7 @@ export default function HomePage() {
           {badges.map((badge) => (
             <div
               key={badge.id}
-              className="group relative"
+              className="badge group relative"
               tabIndex={0}
               aria-describedby={`${badge.id}-tip`}
             >
@@ -305,7 +307,7 @@ export default function HomePage() {
               <div
                 id={`${badge.id}-tip`}
                 role="tooltip"
-                className="glass-solid pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-44 -translate-x-1/2 rounded-xl px-3 py-2 text-center text-xs opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
+                className="badge-tip glass-solid pointer-events-none absolute bottom-full z-20 mb-2 w-44 rounded-xl px-3 py-2 text-center text-xs opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
               >
                 <div className="font-medium text-slate-100">{badge.name}</div>
                 <div className="text-slate-400">{badge.description}</div>
