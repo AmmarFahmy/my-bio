@@ -1,11 +1,12 @@
 'use client';
 import Image from 'next/image';
 import { CSSProperties, useEffect, useRef } from 'react';
-import { FaAward, FaLinkedinIn, FaFacebookF } from 'react-icons/fa';
+import { FaLinkedinIn, FaFacebookF } from 'react-icons/fa';
 import { FiExternalLink } from 'react-icons/fi';
 
 const award = {
-  title: 'Merit Award for LawMate.lk',
+  title: 'Merit Award for',
+  product: 'LawMate.lk',
   event: 'National AI Awards 2026',
   category: 'Best AI Startup / MSME Innovation',
   body:
@@ -19,16 +20,17 @@ const award = {
   facebook: 'https://www.facebook.com/share/p/1C5GDcj3kU/',
 };
 
-// Fired once when the card scrolls into view, overlapping so there is almost
-// always a star twinkling somewhere across the run.
+// Gold glints. The first lands 300ms after the card scrolls in, then roughly
+// one a second for as long as it's on screen. Varied sizes give depth, and
+// slightly different cycle lengths stop the pattern from visibly repeating.
 const sparkles = [
-  { top: '14%', left: '84%', delay: 500 },
-  { top: '68%', left: '30%', delay: 850 },
-  { top: '34%', left: '58%', delay: 1150 },
-  { top: '80%', left: '66%', delay: 1450 },
-  { top: '22%', left: '44%', delay: 1750 },
-  { top: '52%', left: '90%', delay: 2050 },
-  { top: '44%', left: '14%', delay: 2350 },
+  { top: '14%', left: '86%', size: 16, delay: 300, cycle: 7 },
+  { top: '66%', left: '28%', size: 11, delay: 1300, cycle: 7.6 },
+  { top: '34%', left: '60%', size: 13, delay: 2350, cycle: 8.1 },
+  { top: '82%', left: '70%', size: 10, delay: 3250, cycle: 7.3 },
+  { top: '20%', left: '42%', size: 14, delay: 4300, cycle: 8.6 },
+  { top: '52%', left: '92%', size: 12, delay: 5200, cycle: 7.9 },
+  { top: '42%', left: '12%', size: 15, delay: 6250, cycle: 8.3 },
 ];
 
 const MAX_TILT = 3;
@@ -92,11 +94,11 @@ export default function AwardCard() {
   return (
     <article
       ref={cardRef}
-      className="glass-solid award-ring tilt relative w-full overflow-hidden rounded-3xl p-4 sm:p-6"
+      className="glass glow-border spotlight tilt relative w-full overflow-hidden rounded-[28px] p-4 sm:p-6"
     >
-      {/* Warm wash behind the glass, so this card reads as the hero moment */}
+      {/* Warm wash inside the glass, so this card reads as the hero moment */}
       <div
-        className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-accent/20 blur-3xl"
+        className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-gold-400/20 blur-3xl"
         aria-hidden="true"
       />
 
@@ -104,7 +106,15 @@ export default function AwardCard() {
         <span
           key={index}
           className="sparkle"
-          style={{ top: spark.top, left: spark.left, '--sd': `${spark.delay}ms` } as CSSProperties}
+          style={
+            {
+              top: spark.top,
+              left: spark.left,
+              '--size': `${spark.size}px`,
+              '--sd': `${spark.delay}ms`,
+              '--cycle': `${spark.cycle}s`,
+            } as CSSProperties
+          }
           aria-hidden="true"
         />
       ))}
@@ -122,44 +132,47 @@ export default function AwardCard() {
         </div>
 
         <div className="flex min-w-0 flex-col items-start gap-2.5">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/15 px-3 py-1 text-2xs font-semibold uppercase tracking-wider text-accent-soft ring-1 ring-inset ring-accent/30">
-            <FaAward className="animate-float text-xs" aria-hidden="true" />
+          <span className="eyebrow">
+            <span className="eyebrow__dot" aria-hidden="true" />
             Recognition
           </span>
 
-          <h3 className="award-shine text-xl font-bold leading-tight sm:text-2xl">
-            {award.title}
+          <h3 className="font-display text-2xl font-bold leading-tight tracking-tight text-cream-50 sm:text-[1.75rem]">
+            {award.title}{' '}
+            <span className="text-gold-gradient drop-shadow-[0_0_24px_rgba(245,180,24,0.35)]">
+              {award.product}
+            </span>
           </h3>
 
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-cream-50/50">
             {award.event}
           </p>
 
           {/* The category is the headline fact — glow it */}
-          <p className="category-chip text-sm font-semibold leading-snug text-accent sm:text-base">
+          <p className="category-chip text-sm font-semibold leading-snug text-gold-300 sm:text-base">
             {award.category}
           </p>
 
-          <p className="mt-0.5 text-sm leading-relaxed text-slate-300/90">{award.body}</p>
+          <p className="mt-0.5 text-sm leading-relaxed text-cream-50/75">{award.body}</p>
 
           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
             <a
               href={award.announcement}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 font-medium text-accent transition-colors duration-300 hover:text-accent-soft"
+              className="inline-flex items-center gap-1.5 font-semibold text-gold-300 underline-offset-4 transition-colors duration-300 hover:text-gold-200 hover:underline"
             >
               Official announcement
               <FiExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
             </a>
 
-            <span className="flex items-center gap-3 text-slate-400">
+            <span className="flex items-center gap-3 text-cream-50/55">
               <span className="text-xs">Our post:</span>
               <a
                 href={award.linkedIn}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-white"
+                className="inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-cream-50"
                 aria-label="Our LinkedIn post about the award"
               >
                 <FaLinkedinIn className="text-sm" aria-hidden="true" />
@@ -169,7 +182,7 @@ export default function AwardCard() {
                 href={award.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-white"
+                className="inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-cream-50"
                 aria-label="Our Facebook post about the award"
               >
                 <FaFacebookF className="text-sm" aria-hidden="true" />

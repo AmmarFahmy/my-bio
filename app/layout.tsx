@@ -1,12 +1,16 @@
 import './globals.css';
 import { ReactNode } from 'react';
-import { Inter } from 'next/font/google';
+import { Bricolage_Grotesque, Figtree } from 'next/font/google';
 import Script from 'next/script';
 import Constellation from '@/components/Constellation';
+import Embers from '@/components/Embers';
 import SmoothScroll from '@/components/SmoothScroll';
 import ScrollFx from '@/components/ScrollFx';
 
-const inter = Inter({ subsets: ['latin'], display: 'swap' });
+// Same pairing as the 1ClickLesson landing page: Bricolage for display,
+// Figtree for everything else.
+const display = Bricolage_Grotesque({ subsets: ['latin'], display: 'swap', variable: '--font-display' });
+const sans = Figtree({ subsets: ['latin'], display: 'swap', variable: '--font-sans' });
 
 const CLARITY_PROJECT_ID = 'z19bxvwp3t';
 
@@ -66,42 +70,44 @@ export const viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover' as const,
-  themeColor: '#05060b',
+  themeColor: '#0b080c',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <head>
         {/* Scroll-reveal starts hidden in CSS. With JS off nothing would ever
             reveal it, so un-hide everything in that case. */}
         <noscript>
-          <style>{'.reveal{opacity:1 !important;transform:none !important}'}</style>
+          <style>
+            {'.reveal,.reveal-group [data-stagger]{opacity:1 !important;translate:none !important;scale:none !important}'}
+          </style>
         </noscript>
       </head>
       <body
-        className={`${inter.className} min-h-screen bg-ink-950 text-slate-100 antialiased flex justify-center overflow-x-hidden px-4 py-10 sm:py-14`}
+        className="grain flex min-h-screen justify-center overflow-x-hidden bg-ink-950 px-4 py-10 font-sans text-cream-50 antialiased sm:py-14"
       >
-        {/* Fixed backdrop the glass panes sit against. Each blob gets a
-            wrapper layer so parallax can move it without disturbing the
-            blob's own drift animation. */}
+        {/* The night sky the glass frosts against. data-speed is each blob's
+            parallax rate; ScrollFx applies it on the `translate` property,
+            which composes with the drift running on `transform`. */}
         <div className="aurora" aria-hidden="true">
-          <div className="aurora-layer" data-speed="0.14">
-            <div className="aurora-blob aurora-blob--one" />
-          </div>
-          <div className="aurora-layer" data-speed="0.07">
-            <div className="aurora-blob aurora-blob--two" />
-          </div>
-          <div className="aurora-layer" data-speed="0.2">
-            <div className="aurora-blob aurora-blob--three" />
-          </div>
+          <div className="aurora-blob aurora-blob--one" data-speed="0.06" />
+          <div className="aurora-blob aurora-blob--two" data-speed="0.03" />
+          <div className="aurora-blob aurora-blob--three" data-speed="0.1" />
+          <div className="aurora-blob aurora-blob--four" data-speed="0.05" />
+          <div className="stars" />
+          <div className="stars stars--twinkle" />
           <Constellation />
+          <Embers layer="back" />
         </div>
 
         <SmoothScroll />
         <ScrollFx />
 
         {children}
+
+        <Embers layer="front" />
 
         {/* Microsoft Clarity */}
         <Script id="ms-clarity" strategy="afterInteractive">

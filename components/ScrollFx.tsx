@@ -2,19 +2,20 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Reading-progress bar plus parallax on the aurora layers.
+ * Reading-progress bar plus parallax on the aurora blobs.
  *
- * Both run off one rAF-throttled passive scroll listener and only ever set
- * transforms, so this stays off the layout/paint path. The parallax moves a
- * wrapper layer rather than the blob itself, leaving the blob's own drift
- * animation free to keep running underneath.
+ * Both run off one rAF-throttled passive scroll listener and only ever touch
+ * transform-family properties, so this stays off the layout/paint path.
+ * Parallax is written to the `translate` property rather than `transform`,
+ * which the blobs' drift animation already owns — the two compose instead of
+ * one overwriting the other.
  */
 export default function ScrollFx() {
   const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const bar = barRef.current;
-    const layers = Array.from(document.querySelectorAll<HTMLElement>('.aurora-layer'));
+    const blobs = Array.from(document.querySelectorAll<HTMLElement>('.aurora-blob[data-speed]'));
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let ticking = false;
 
@@ -31,9 +32,11 @@ export default function ScrollFx() {
 
       if (reduceMotion) return;
 
-      for (const layer of layers) {
-        const speed = Number(layer.dataset.speed ?? 0);
-        layer.style.transform = `translate3d(0, ${scrolled * speed}px, 0)`;
+      // Drift upward with the content, just slower — the backdrop reads as
+      // further away. (Moving it against the scroll fights the content.)
+      for (const blob of blobs) {
+        const speed = Number(blob.dataset.speed ?? 0);
+        blob.style.setProperty('translate', `0 ${(-scrolled * speed).toFixed(1)}px`);
       }
     };
 
